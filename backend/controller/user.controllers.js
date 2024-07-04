@@ -1,6 +1,18 @@
 import { pool } from "../db.js";
 import { usersSchema } from "../models/users.js";
 
+//Metodo para autenticar usuarios login
+
+export const userlogin = async (req, res) => {
+  try {
+   
+ 
+  
+  } catch (error) {
+    
+  }
+}
+
 //metodos para consultar usuarios registrados eventos en la base de datos
 export const userSelects = async (req, res) => {
   try {
@@ -60,7 +72,9 @@ export const userCreate = async (req, res) => {
     const placeholder = columns.map(() => "?").join(",");
     const values = columns.map((column) => req.body[column]);
 
-    const query = `INSERT INTO ${tableName} (${columns.join(",")}) VALUES (${placeholder})`;
+    const query = `INSERT INTO ${tableName} (${columns.join(
+      ","
+    )}) VALUES (${placeholder})`;
 
     const [result] = await pool.query(query, values);
 

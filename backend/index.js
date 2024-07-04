@@ -1,5 +1,6 @@
 import express from "express"; // Importa el módulo express para crear una aplicación web
 import { PORT } from "./config.js"; // Importa la configuración del puerto desde el archivo config.js
+import cors from "cors";
 import indexRouters from "./routers/index.routes.js"; // Importa las rutas definidas en el archivo index.routes.js
 import morgan from "morgan"; // Importa morgan para logging
 import userRouter  from "./routers/user.routes.js";
@@ -7,6 +8,7 @@ import eventRouter from "./routers/event.routes.js";
 
 const app = express(); // Crea una instancia de la aplicación express
 
+app.use(cors())
 app.use(express.json()); // Usa express.json() para analizar solicitudes JSON
 app.use(morgan("dev")); // Usa morgan para loguear peticiones HTTP
 app.use(indexRouters);

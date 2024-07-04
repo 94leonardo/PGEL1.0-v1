@@ -25,3 +25,4 @@ export const usersSchema = {
   ],
   required: ["nombre", "email", "password"],
 };
+
