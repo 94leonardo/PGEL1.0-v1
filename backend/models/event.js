@@ -6,7 +6,6 @@ export const evenSchema = {
     "nombre_even",
     "tipo_even",
     "ciudad_even",
-    "ubicacion_even",
     "direccion_even",
     "fechaEvento",
     "telefono_even",

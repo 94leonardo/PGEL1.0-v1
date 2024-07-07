@@ -28,7 +28,7 @@ function RegisterPage() {
           }
         }}
       >
-        {({ handleChange, handleSubmit, values }) => (
+        {({ handleChange, handleSubmit, values, isSubmitting }) => (
           <Form className="register-form" onSubmit={handleSubmit}>
             <label>Documento: </label>
             <input
@@ -110,7 +110,7 @@ function RegisterPage() {
               onChange={handleChange}
               values={values.fecha_creacion}
             />
-            <button type="submit">Registrar</button>
+            <button type="submit" disable ={isSubmitting}>{isSubmitting ? "Registrando..." : "Registrar"}</button>
           </Form>
         )}
       </Formik>

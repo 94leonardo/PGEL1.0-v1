@@ -5,13 +5,8 @@ import { usersSchema } from "../models/users.js";
 
 export const userlogin = async (req, res) => {
   try {
-   
- 
-  
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 
 //metodos para consultar usuarios registrados eventos en la base de datos
 export const userSelects = async (req, res) => {
@@ -34,15 +29,28 @@ export const userSelects = async (req, res) => {
   }
 };
 
-//metodos para consultar un usuario registrado evento en la base de datos
+//metodos para consultar un usuario registrado evento en la base de datos por Id
 export const userUnic = async (req, res) => {
   try {
-    //obtener la consulta de  un unico usuario
+    const { tableName, columns, relatedTables } = usersSchema;
+    const { id } = req.params;
 
-    const [result] = await pool.query(
-      "SELECT * FROM usuarios WHERE id_user = ?",
-      [req.params.id]
-    );
+    // Selección de columnas de la tabla principal
+    const selectedColumns = columns
+      .map((column) => `${tableName}.${column}`)
+      .join(", ");
+
+    // Uniones con tablas relacionadas
+    let joinClauses = "";
+    let relatedColumns = "";
+
+    const query = `
+      SELECT ${selectedColumns}${relatedColumns} 
+      FROM ${tableName}
+      ${joinClauses}
+      WHERE ${tableName}.id_documento = ?`;
+
+    const [result] = await pool.query(query, [id]);
 
     if (result.length === 0) {
       return res.status(404).json({
@@ -50,15 +58,17 @@ export const userUnic = async (req, res) => {
         message: "ID no encontrado",
       });
     }
-    return res.status(200).send({
+
+    return res.status(200).json({
       status: "success",
-      message: "Consulta id exitosa ",
+      message: "Consulta ID exitosa",
       result,
     });
   } catch (error) {
     return res.status(500).json({
       status: "error",
-      message: "Error al obtener las consulta",
+      message: "Error al obtener la consulta",
+      error: error.message,
     });
   }
 };
