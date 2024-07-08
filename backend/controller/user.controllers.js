@@ -12,9 +12,20 @@ export const userlogin = async (req, res) => {
 export const userSelects = async (req, res) => {
   try {
     // Realiza una consulta simple a la base de datos
-    const [result] = await pool.query(
-      "SELECT * FROM usuarios ORDER BY fecha_creacion ASC "
-    );
+    const { tableName, columns } = usersSchema;
+    // Selección de columnas de la tabla principal
+    const selectedColumns = columns.join(", ");
+    // Construcción de la consulta
+    const query = `SELECT ${selectedColumns} FROM ${tableName}`;
+    // Ejecutar la consulta
+    const [result] = await pool.query(query);
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "No se encontraron usuarios",
+      });
+    }
 
     return res.status(200).send({
       status: "success",
@@ -39,18 +50,15 @@ export const userUnic = async (req, res) => {
     const selectedColumns = columns
       .map((column) => `${tableName}.${column}`)
       .join(", ");
-
-    // Uniones con tablas relacionadas
-    let joinClauses = "";
-    let relatedColumns = "";
-
-    const query = `
-      SELECT ${selectedColumns}${relatedColumns} 
-      FROM ${tableName}
-      ${joinClauses}
-      WHERE ${tableName}.id_documento = ?`;
-
+    const query = `SELECT ${selectedColumns} FROM ${tableName} WHERE ${tableName}.id_documento = ?`;
     const [result] = await pool.query(query, [id]);
+
+    if (!id) {
+      return res.status(400).json({
+        status: "error",
+        message: "El ID del Usuario es requerido",
+      });
+    }
 
     if (result.length === 0) {
       return res.status(404).json({
@@ -115,9 +123,10 @@ export const userUpdate = async (req, res) => {
     const setClause = updateColumns.map((column) => `${column} = ?`).join(",");
     const values = updateColumns.map((column) => req.body[column]);
 
-    const query = `UPDATE ${tableName} SET ${setClause} WHERE id_user = ?`;
+    const query = `UPDATE ${tableName} SET ${setClause} WHERE id_documento = ?`;
     values.push(req.params.id); // Añadir el id del usuario al final de los valores
     const [result] = await pool.query(query, values);
+
     if (result.affectedRows === 0) {
       return res.status(404).json({
         message: "Id no encontrado",
@@ -142,11 +151,22 @@ export const userUpdate = async (req, res) => {
 
 export const userDelete = async (req, res) => {
   try {
-    const [result] = await pool.query(
-      "DELETE FROM usuarios WHERE id_user = ?",
-      [req.params.id]
-    );
+    const { tableName, columns } = usersSchema;
+    const { id } = req.params;
 
+    // Selección de columnas de la tabla principal
+    const selectedColumns = columns
+      .map((column) => `${tableName}.${column}`)
+      .join(", ");
+    const query = `DELETE FROM ${tableName} WHERE id_documento = ?`;
+    const [result] = await pool.query(query, [id]);
+
+    if (!id) {
+      return res.status(400).json({
+        status: "error",
+        message: "El ID del Usuario es requerido",
+      });
+    }
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Id no encontrado" });
     }

@@ -11,7 +11,7 @@ export const evenSchema = {
     "telefono_even",
     "email_even",
     "organizador_even",
-    "id_user",
+    "id_documento",
   ],
   foreignKeys: [
     {

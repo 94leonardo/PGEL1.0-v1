@@ -55,17 +55,10 @@ export const eventUnic = async (req, res) => {
     const { tableName, columns } = evenSchema;
     const { id } = req.params;
 
-    if (!id) {
-      return res.status(400).json({
-        status: "error",
-        message: "El ID del evento es requerido",
-      });
-    }
-
-    const query = `SELECT ${columns.join(
-      ", "
-    )} FROM ${tableName} WHERE id_even = ?`;
+    const query = `SELECT ${columns.join(", ")} FROM ${tableName} WHERE id_even = ?`;
     const [result] = await pool.query(query, [id]);
+
+    
 
     if (result.length === 0) {
       return res.status(404).json({
@@ -124,8 +117,9 @@ export const evenUpdate = async (req, res) => {
 
 export const evenDelete = async (req, res) => {
   try {
-
-   const[result] = await pool.query("DELETE FROM eventos WHERE id_even = ?", [req.params.id]);
+    const [result] = await pool.query("DELETE FROM eventos WHERE id_even = ?", [
+      req.params.id,
+    ]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
