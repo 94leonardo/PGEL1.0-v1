@@ -15,3 +15,4 @@ router.post("/crear_evento", evenCreate); //crear tareas de eventos
 router.put("/Update_evento/:id", evenUpdate); //actualizar
 router.delete("/delete_evento/:id", evenDelete); //cual tarea eliminar por id
 export default router;
+ 

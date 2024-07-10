@@ -6,7 +6,7 @@ function RegisterPage() {
     <div>
       <Formik
         initialValues={{
-          documento: "",
+          id_documento: "",
           nombre: "",
           apellido: "",
           email: "",
@@ -20,12 +20,12 @@ function RegisterPage() {
         onSubmit={async (values, actions) => {
           console.log(values);
           try {
-            const response = await registerRequest(values);
+            const response = await registerRequest(user);
             console.log(response);
-            actions.resetForm();
           } catch (error) {
             console.log(error);
           }
+          actions.resetForm();
         }}
       >
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
@@ -33,10 +33,10 @@ function RegisterPage() {
             <label>Documento: </label>
             <input
               type="text"
-              name="documento"
+              name="id_documento"
               placeholder="Documento"
               onChange={handleChange}
-              values={values.documento}
+              values={values.id_documento}
             />
             <label>Nombre: </label>
             <input
@@ -110,7 +110,9 @@ function RegisterPage() {
               onChange={handleChange}
               values={values.fecha_creacion}
             />
-            <button type="submit" disable ={isSubmitting}>{isSubmitting ? "Registrando..." : "Registrar"}</button>
+            <button type="submit" disable={isSubmitting}>
+              {isSubmitting ? "Registrando..." : "Registrar"}
+            </button>
           </Form>
         )}
       </Formik>

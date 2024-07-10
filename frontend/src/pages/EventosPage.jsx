@@ -1,7 +1,12 @@
 import { Form, Formik } from "formik";
 import EventoRegistro from "../api/evento.api";
+import { useEventoContext } from "../context/EventoContextprov";
+
 
 function EventoPage() {
+
+  const {createEvent} = useEventoContext();
+ 
   return (
     <div>
       <Formik
@@ -15,17 +20,12 @@ function EventoPage() {
           telefono_even: "",
           email_even: "",
           organizador_even: "",
-          id_user: "",
+          id_documento: "",
         }}
         onSubmit={async (values, actions) => {
-          console.log(values);
-          try {
-            const response = await EventoRegistro(values);
-            console.log(response);
-            actions.resetForm();
-          } catch (error) {
-            console.log(error);
-          }
+          console.log(values);  
+          createEvent(values); 
+          actions.resetForm();
         }}
       >
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
@@ -105,10 +105,10 @@ function EventoPage() {
             <label>Usuario asignado</label>
             <input
               type="text"
-              name="id_user"
+              name="id_documento"
               placeholder="asignacion"
               onChange={handleChange}
-              values={values.id_user}
+              values={values.id_documento}
             />
             <button type="submit" disable={isSubmitting}>
               {isSubmitting ? "Registrando..." : "Registrar"}

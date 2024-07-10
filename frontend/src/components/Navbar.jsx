@@ -14,6 +14,9 @@ function Navbar() {
         <li>
           <Link to="/crear_evento">Eventos</Link>
         </li>
+        <li>
+          <Link to="/Listar_eventos">Lista Eventos</Link>
+        </li>
       </ul>
     </div>
   );
